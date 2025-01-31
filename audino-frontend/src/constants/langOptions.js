@@ -42,6 +42,7 @@ const langOptions = [
   // { label: "Ukrainian", value: "uk" },
   { label: "Urdu", value: "ur" },
   // { label: "Vietnamese", value: "vi" },
+  { label: "Somali", value: "so" },
 ];
 
 export default langOptions;

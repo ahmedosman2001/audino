@@ -8,6 +8,8 @@ import { ReactTransliterate } from "react-transliterate";
 import "react-transliterate/dist/index.css";
 import langOptions from "../../../constants/langOptions";
 import { DATASET_MAPING } from "../../../constants/constants";
+import PrimaryButton from "../../../components/PrimaryButton/PrimaryButton";
+import { sendAudioToModelApi } from "../../../services/annotation.services";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -145,6 +147,22 @@ export default function EditableFields({
     getJobDetailQuery.data?.task_flags ?? {},
     "Age"
   );
+
+  const handleTranscriptionButtonClick = async () => {
+    try {
+      const audioSegment = await getAudioSegment();
+      const transcription = await sendAudioToModelApi(audioSegment);
+      handleValueChange("transcription", transcription);
+    } catch (error) {
+      toast.error("Failed to fetch transcription");
+    }
+  };
+
+  const getAudioSegment = async () => {
+    // Implement the logic to get the audio segment based on the current region
+    // This is a placeholder function, you need to implement the actual logic
+    return new Blob();
+  };
 
   return (
     <>
@@ -352,19 +370,12 @@ export default function EditableFields({
             return <textarea {...props} />;
           }}
         />
-        {/* <CustomInput
-          type="text"
-          inputType="textarea"
-          refs={inputTextRef}
-          name="transcription"
-          id="transcription"
-          // formError={formError}
-          placeholder="Transcription"
-          value={getInputValue("transcription")}
-          onChange={(e) => {
-            handleValueChange("transcription", e.target.value);
-          }}
-        /> */}
+        <PrimaryButton
+          className="mt-2"
+          onClick={handleTranscriptionButtonClick}
+        >
+          Get Transcription
+        </PrimaryButton>
       </div>
 
       {showGender && (
@@ -411,6 +422,7 @@ export default function EditableFields({
               { label: "Japanese (Japan)", value: "ja-JP" },
               { label: "German (Germany)", value: "de-DE" },
               { label: "Russian (Russia)", value: "ru-RU" },
+              { label: "Somali", value: "so" },
             ]}
             // formError={formError}
             value={getInputValue("locale")}

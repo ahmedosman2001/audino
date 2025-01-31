@@ -1206,6 +1206,28 @@ export default function AnnotatePage({}) {
     }
   }, [currentTab, conflicts, gtAnnotations]);
 
+  const sendAudioToModelApi = async (audioSegment) => {
+    try {
+      const response = await fetch("YOUR_API_ENDPOINT", {
+        method: "POST",
+        headers: {
+          "Content-Type": "audio/wav",
+        },
+        body: audioSegment,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch transcription");
+      }
+
+      const data = await response.json();
+      return data.transcription;
+    } catch (error) {
+      console.error("Error fetching transcription:", error);
+      throw error;
+    }
+  };
+
   return (
     <>
       <TopBar
