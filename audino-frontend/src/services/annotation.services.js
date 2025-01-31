@@ -56,28 +56,6 @@ export const downloadAnnotationApi = async (data) => {
           }
           if (response.status === 202) setTimeout(checkStatus, 3000);
           if (response.status === 200) resolve(response.data);
-          // if (["Queued", "Started"].includes(response.data.state)) {
-          //   if (response.data.message !== "") {
-          //     onUpdate(response.data.message, response.data.progress || 0);
-          //   }
-          //   setTimeout(checkStatus, 1000);
-          // } else if (response.data.state === "Finished") {
-          //   resolve();
-          // } else if (response.data.state === "Failed") {
-          //   // If request has been successful, but task hasn't been created
-          //   // Then passed data is wrong and we can pass code 400 - ToDo
-          //   const message = `
-          //                 Could not create the task on the server. ${response.data.message}.
-          //             `;
-          //   toast.error(message);
-          //   reject(Error(message));
-          // } else {
-          //   // If server has another status, it is unexpected
-          //   // Therefore it is server error and we can pass code 500
-          //   const message = `Unknown task state has been received: ${response.data.state}`;
-          //   toast.error(message);
-          //   reject(Error(message));
-          // }
         } catch (errorData) {
           const message = `Could not fetch status  ${errorData.message}`;
           toast.error(message);
@@ -96,3 +74,24 @@ export const downloadAnnotationApi = async (data) => {
   }
 };
 
+export const sendAudioToModelApi = async (audioSegment) => {
+  try {
+    const response = await fetch("YOUR_API_ENDPOINT", {
+      method: "POST",
+      headers: {
+        "Content-Type": "audio/wav",
+      },
+      body: audioSegment,
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch transcription");
+    }
+
+    const data = await response.json();
+    return data.transcription;
+  } catch (error) {
+    console.error("Error fetching transcription:", error);
+    throw error;
+  }
+};
